@@ -1,0 +1,58 @@
+.checkbox {
+  &:focus &__input {
+    box-shadow: var(--shadow-button-focus);
+  }
+
+  &__wrapper {
+    cursor: pointer;
+  }
+
+  &__input {
+    opacity: 0;
+    outline: 0;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  &__input:disabled {
+    cursor: default;
+  }
+
+  &__button {
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    border: 2px solid #ddd;
+    background-color: var(--color-white);
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  &__button--checked {
+    border-color: var(--color-black);
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  &__button--error {
+    border-color: var(--color-red);
+  }
+
+  &__button--disabled {
+    border-color: var(--color-disabled);
+    background-color: var(--color-disabled);
+  }
+
+  &__error-text {
+    color: var(--color-red);
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+
+  & label + label {
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+}

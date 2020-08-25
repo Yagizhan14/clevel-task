@@ -1,0 +1,38 @@
+.sidenav {
+  width: 220px;
+  height: calc(100vh - 64px);
+  background-color: #ededed;
+
+  &__nav {
+  }
+
+  &__nav-list {
+    list-style: none;
+  }
+
+  &__nav-item {
+  }
+
+  &__nav-link,
+  &__nav-link:link,
+  &__nav-link:visited {
+    display: flex;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken($color: #ededed, $amount: 10);
+    }
+  }
+
+  &__nav-link--selected {
+    background-color: darken($color: #ededed, $amount: 10);
+  }
+
+  &__nav-link-text {
+    margin-left: 0.5rem;
+  }
+}

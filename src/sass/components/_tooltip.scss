@@ -1,0 +1,12 @@
+.tooltip {
+  color: var(--color-white);
+
+  &__container {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+
+  &__caret {
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,52 @@
+.modal-outside {
+  opacity: 0.9;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal {
+  max-height: calc(100vh - 32px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &--sm {
+    width: 540px;
+  }
+
+  &--md {
+    width: 720px;
+  }
+
+  &--lg {
+    width: 900px;
+  }
+
+  &__inner {
+    min-height: 0px;
+    min-width: 0px;
+    flex: 1 1 auto;
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    position: relative;
+  }
+
+  &__body {
+    min-height: 0px;
+    min-width: 0px;
+    flex: 1 1 auto;
+    overflow: auto;
+  }
+
+  &__header {
+    position: relative;
+    max-width: 100%;
+  }
+
+  &__footer {
+    position: relative;
+    max-width: 100%;
+  }
+}

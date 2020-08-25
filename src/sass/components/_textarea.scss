@@ -1,0 +1,26 @@
+.textarea {
+  &__input {
+    width: 100%;
+    line-height: 1.3;
+    padding: 8px 16px;
+    resize: none;
+    -webkit-font-smoothing: antialiased;
+    border-color: #ddd;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    font-family: inherit;
+
+    &:focus {
+      box-shadow: var(--shadow-button-focus);
+      outline: 0;
+    }
+
+    &:disabled {
+      background-color: var(--color-disabled);
+    }
+  }
+
+  &__input--error {
+    border-color: var(--color-red);
+  }
+}

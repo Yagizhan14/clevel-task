@@ -1,0 +1,71 @@
+.text {
+  text-align: left;
+  color: var(--color-text);
+  word-wrap: break-word;
+  font-weight: 400;
+  font-size: 1.6rem;
+  white-space: break-word;
+
+  &--right {
+    text-align: right;
+  }
+
+  &--justify {
+    text-align: justify;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--white {
+    color: var(--color-white);
+  }
+
+  &--black {
+    color: var(--color-black);
+  }
+
+  &--red {
+    color: var(--color-red);
+  }
+
+  &--blue {
+    color: var(--color-blue);
+  }
+
+  &--gray {
+    color: var(--color-gray);
+  }
+
+  &--noWrap {
+    white-space: nowrap;
+  }
+
+  &--normal {
+    white-space: normal;
+  }
+
+  &--italic {
+    font-style: italic;
+  }
+
+  &--sm {
+    font-size: 1.2rem;
+  }
+
+  &--md {
+    font-size: 1.4rem;
+  }
+
+  &--truncate {
+    white-space: nowrap !important;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &--bold {
+    font-weight: 700;
+  }
+}

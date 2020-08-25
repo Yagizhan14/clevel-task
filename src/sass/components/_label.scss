@@ -1,0 +1,22 @@
+.label {
+  cursor: pointer;
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--color-black);
+  position: relative;
+  display: block;
+
+  &--disabled {
+    color: var(--color-label-disabled);
+  }
+
+  &--required > *::after {
+    content: "*";
+    color: var(--color-red);
+    position: absolute;
+    top: -0.3rem;
+    right: -0.8rem;
+    font-size: 1.5rem;
+  }
+}

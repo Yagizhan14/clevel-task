@@ -1,0 +1,93 @@
+.icon-button {
+  cursor: pointer;
+  background-color: unset;
+
+  &:focus,
+  &:focus > div {
+    outline: 0;
+  }
+
+  & > div {
+    transition: all 0.2s cubic-bezier(1, 0, 0, 1);
+  }
+
+  &--transparent {
+    &:hover > div {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    &:focus > div {
+      background-color: rgba(0, 0, 0, 0.06);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &--white {
+    &:hover > div {
+      background-color: var(--color-white);
+    }
+
+    &:focus > div {
+      background-color: var(--color-white);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &--red {
+    &:hover > div {
+      background-color: var(--color-red);
+    }
+
+    &:focus > div {
+      background-color: var(--color-red);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &--black {
+    &:hover > div {
+      background-color: var(--color-black);
+    }
+
+    &:focus > div {
+      background-color: var(--color-black);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &--blue {
+    &:hover > div {
+      background-color: var(--color-blue);
+    }
+
+    &:focus > div {
+      background-color: var(--color-blue);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &--yellow {
+    &:hover > div {
+      background-color: var(--color-yellow);
+    }
+
+    &:focus > div {
+      background-color: var(--color-yellow);
+      box-shadow: var(--shadow-button-focus);
+    }
+  }
+
+  &:disabled > div {
+    background-color: unset;
+  }
+
+  &:disabled {
+    background-color: transparent;
+    pointer-events: none;
+
+    & svg {
+      cursor: not-allowed;
+      stroke: rgba(16, 16, 16, 0.3);
+    }
+  }
+}

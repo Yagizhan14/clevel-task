@@ -1,0 +1,23 @@
+.link {
+  &:link,
+  &:visited {
+    font-size: inherit;
+    font-weight: inherit;
+    color: currentColor;
+    text-decoration: none;
+  }
+
+  &--hovernone {
+    &:focus,
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+
+  &--hoverunderline {
+    &:focus,
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+}
