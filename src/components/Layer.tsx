@@ -6,5 +6,8 @@ interface ILayerProps {
 }
 
 export const Layer: React.FC<ILayerProps> = ({ children }) => {
-  return createPortal(<div>{children}</div>, document.getElementById("root")!);
+  return createPortal(
+    <div>{children}</div>,
+    document.getElementById("modal-root")!,
+  );
 };

@@ -3,7 +3,7 @@
     min-height: 36px;
     padding: 8px 38px 8px 16px;
     width: 100%;
-    font-size: 1.6rem;
+    font-size: 1rem;
     color: var(--color-text);
     background-color: var(--color-white);
     border-color: #ddd;
@@ -35,6 +35,9 @@
     transform-origin: top;
     transform: scaleY(0) translateX(-50%);
     transition: transform 0.2s;
+    top: 100%;
+    border: 1px solid black;
+    z-index: 99999;
   }
 
   &__input:focus + &__picker-container,
@@ -46,17 +49,25 @@
   &__current-month {
     text-align: center;
     color: #111;
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: 700;
   }
 
   &__weekday {
     color: #767676;
     display: inline-block;
-    font-size: 1.6rem;
+    font-size: 1rem;
     line-height: 40px;
     margin: 0;
     text-align: center;
     width: 40px;
+  }
+
+  .btn--transparent {
+    border: none !important;
+
+    &:hover {
+      background-color: black;
+    }
   }
 }

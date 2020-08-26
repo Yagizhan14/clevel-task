@@ -1,7 +1,7 @@
 .modal-outside {
-  opacity: 0.9;
   overflow-y: scroll;
   background: rgba(0, 0, 0, 0.4);
+  z-index: 100000;
 }
 
 .modal {
@@ -10,6 +10,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: white;
+  opacity: 1;
 
   &--sm {
     width: 540px;

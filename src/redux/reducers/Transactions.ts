@@ -1,9 +1,10 @@
-import { ITransaction } from "../models/Transaction";
+import { ITransaction, ITransactionsState } from "../models/Transaction";
 import {
   ITransactionActions,
   TransactionActionTypes,
 } from "../models/Transaction";
 import data from "../../data/transactions.json";
+import { Currencies } from "../models/Currencies";
 
 const mapJsonToTransaction = (data: any): ITransaction[] => {
   return data.transactions.map((item: any) => ({
@@ -16,21 +17,82 @@ const mapJsonToTransaction = (data: any): ITransaction[] => {
   }));
 };
 
-const initialState: ITransaction[] = mapJsonToTransaction(data);
+const initialState: ITransactionsState = {
+  transactionDraft: {
+    id: 0,
+    amount: 0,
+    currency: Currencies.TRY,
+    name: "",
+    date: new Date(),
+    description: "",
+  },
+  willBeDeletedTransactionId: undefined,
+  transactions: mapJsonToTransaction(data),
+  newAndUpdateTransactionModalVisible: false,
+  deleteTransactionModalVisible: false,
+};
 
 export const TransactionsReducer = (
-  state: ITransaction[] = initialState,
+  state: ITransactionsState = initialState,
   action: ITransactionActions,
-) => {
+): ITransactionsState => {
   switch (action.type) {
     case TransactionActionTypes.NEW:
-      return [...state, action.payload];
+      return {
+        ...state,
+        transactions: [...state.transactions, action.payload],
+      };
     case TransactionActionTypes.DELETE:
-      return state.filter((item) => item.id === action.payload);
+      return {
+        ...state,
+        transactions: [
+          ...state.transactions.filter((item) => item.id !== action.payload),
+        ],
+      };
     case TransactionActionTypes.UPDATE:
-      return state.map((item) =>
-        item.id === action.payload.id ? { ...action.payload } : item,
-      );
+      return {
+        ...state,
+        transactions: [
+          ...state.transactions.map((item) =>
+            item.id === action.payload.id ? { ...action.payload } : item,
+          ),
+        ],
+      };
+    case TransactionActionTypes.SHOW_NEW_MODAL:
+      return {
+        ...state,
+        newAndUpdateTransactionModalVisible: true,
+      };
+    case TransactionActionTypes.HIDE_NEW_MODAL:
+      return {
+        ...state,
+        newAndUpdateTransactionModalVisible: false,
+      };
+    case TransactionActionTypes.SHOW_DELETE_MODAL:
+      return {
+        ...state,
+        deleteTransactionModalVisible: true,
+      };
+    case TransactionActionTypes.HIDE_DELETE_MODAL:
+      return {
+        ...state,
+        deleteTransactionModalVisible: false,
+      };
+    case TransactionActionTypes.SET_WILL_BE_DELETED_TRANSACTION_ID:
+      return {
+        ...state,
+        willBeDeletedTransactionId: action.payload,
+      };
+    case TransactionActionTypes.SET_WILL_BE_UPDATED_TRANSACTION_ID:
+      return {
+        ...state,
+        transactionDraft: { ...state.transactions.find((item) => item.id)! },
+      };
+    case TransactionActionTypes.TRANSACTION_DRAFT_CHANGE:
+      return {
+        ...state,
+        transactionDraft: { ...action.payload },
+      };
     default:
       return state;
   }

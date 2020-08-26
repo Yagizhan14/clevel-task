@@ -29,20 +29,20 @@ export const Modal: React.FC<IModalProps> = ({
 }) => {
   const modalRef = React.useRef<any>();
 
-  React.useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target) &&
-        closeOnOutsideClick
-      ) {
-        onDismiss();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
+  // React.useEffect(() => {
+  //   const handleClickOutside = (event: any) => {
+  //     if (
+  //       modalRef.current &&
+  //       !modalRef.current.contains(event.target) &&
+  //       closeOnOutsideClick
+  //     ) {
+  //       onDismiss();
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handleClickOutside);
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   return isVisible ? (
     <Layer>
@@ -60,7 +60,6 @@ export const Modal: React.FC<IModalProps> = ({
           bgColor="white"
           className={setClassNames(size)}
           role={role}
-          onBlur={!closeOnOutsideClick ? () => {} : onDismiss}
           style={{ width: typeof size === "number" ? size : undefined }}
           ref={modalRef}
         >
@@ -85,7 +84,9 @@ export const Modal: React.FC<IModalProps> = ({
             {!!header && typeof header === "string" ? (
               <Box className="modal__header">
                 <Box padding={4}>
-                  <Heading align="center">{header}</Heading>
+                  <Heading size="md" align="center">
+                    {header}
+                  </Heading>
                 </Box>
               </Box>
             ) : (
