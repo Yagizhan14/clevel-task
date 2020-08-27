@@ -4,7 +4,7 @@ import {
   ITransactionActions,
 } from "../models/Transaction";
 
-export const newTransaction = (
+export const newTransactionAction = (
   transaction: ITransaction,
 ): ITransactionActions => {
   return {
@@ -13,14 +13,14 @@ export const newTransaction = (
   };
 };
 
-export const deleteTransaction = (id: number): ITransactionActions => {
+export const deleteTransactionAction = (id: number): ITransactionActions => {
   return {
     type: TransactionActionTypes.DELETE,
     payload: id,
   };
 };
 
-export const updateTransaction = (
+export const updateTransactionAction = (
   transaction: ITransaction,
 ): ITransactionActions => {
   return {
@@ -29,31 +29,43 @@ export const updateTransaction = (
   };
 };
 
-export const showNewModal = (): ITransactionActions => {
+export const showNewModalAction = (): ITransactionActions => {
   return {
     type: TransactionActionTypes.SHOW_NEW_MODAL,
   };
 };
 
-export const hideNewModal = (): ITransactionActions => {
+export const hideNewModalAction = (): ITransactionActions => {
   return {
     type: TransactionActionTypes.HIDE_NEW_MODAL,
   };
 };
 
-export const showDeleteModal = (): ITransactionActions => {
+export const showDeleteModalAction = (): ITransactionActions => {
   return {
     type: TransactionActionTypes.SHOW_DELETE_MODAL,
   };
 };
 
-export const hideDeleteModal = (): ITransactionActions => {
+export const hideDeleteModalAction = (): ITransactionActions => {
   return {
     type: TransactionActionTypes.HIDE_DELETE_MODAL,
   };
 };
 
-export const setWillBeDeletedTransactionId = (
+export const showUpdateModalAction = (): ITransactionActions => {
+  return {
+    type: TransactionActionTypes.SHOW_UPDATE_MODAL,
+  };
+};
+
+export const hideUpdateModalAction = (): ITransactionActions => {
+  return {
+    type: TransactionActionTypes.HIDE_UPDATE_MODAL,
+  };
+};
+
+export const setWillBeDeletedTransactionIdAction = (
   id: number | undefined,
 ): ITransactionActions => {
   return {
@@ -62,7 +74,7 @@ export const setWillBeDeletedTransactionId = (
   };
 };
 
-export const setWillBeUpdatedTransactionId = (
+export const setWillBeUpdatedTransactionIdAction = (
   id: number | undefined,
 ): ITransactionActions => {
   return {
@@ -71,7 +83,7 @@ export const setWillBeUpdatedTransactionId = (
   };
 };
 
-export const onTransactionDraftChanged = (
+export const onTransactionDraftChangedAction = (
   newDraft: ITransaction,
 ): ITransactionActions => {
   return {

@@ -15,16 +15,18 @@ import { IconButton } from "../components/IconButton";
 import { ToLocalDate } from "../utils/dateFormat";
 import { Dispatch } from "redux";
 import {
-  deleteTransaction,
-  newTransaction,
-  updateTransaction,
-  showNewModal,
-  hideNewModal,
-  showDeleteModal,
-  hideDeleteModal,
-  setWillBeDeletedTransactionId,
-  onTransactionDraftChanged,
-  setWillBeUpdatedTransactionId,
+  deleteTransactionAction,
+  newTransactionAction,
+  updateTransactionAction,
+  showNewModalAction,
+  hideNewModalAction,
+  showDeleteModalAction,
+  hideDeleteModalAction,
+  setWillBeDeletedTransactionIdAction,
+  onTransactionDraftChangedAction,
+  setWillBeUpdatedTransactionIdAction,
+  showUpdateModalAction,
+  hideUpdateModalAction,
 } from "../redux/actions/Transactions";
 import { Modal } from "../components/Modal";
 import { TextInput } from "../components/TextInput";
@@ -33,24 +35,6 @@ import { TextArea } from "../components/TextArea";
 import { DatePicker } from "../components/DatePicker";
 import { Label } from "../components/Label";
 import Datatable, { IDatatableColumn } from "../components/Datatable";
-
-interface ITransactionsProps extends RouteComponentProps {
-  transactionState: ITransactionsState;
-  createTransaction: (transaction: ITransaction) => ITransactionActions;
-  updateTransaction: (transaction: ITransaction) => ITransactionActions;
-  deleteTransaction: (id: number) => ITransactionActions;
-  showNewModal: () => ITransactionActions;
-  hideNewModal: () => ITransactionActions;
-  showDeleteModal: () => ITransactionActions;
-  hideDeleteModal: () => ITransactionActions;
-  setWillBeDeletedTransactionId: (
-    id: number | undefined,
-  ) => ITransactionActions;
-  onTransactionDraftChange: (newDraft: ITransaction) => ITransactionActions;
-  setWillBeUpdatedTransactionId: (
-    id: number | undefined,
-  ) => ITransactionActions;
-}
 
 const Transactions: React.FC<ITransactionsProps> = ({
   transactionState,
@@ -63,6 +47,9 @@ const Transactions: React.FC<ITransactionsProps> = ({
   hideNewModal,
   setWillBeDeletedTransactionId,
   onTransactionDraftChange,
+  hideUpdateModal,
+  setWillBeUpdatedTransactionId,
+  showUpdateModal,
 }) => {
   const [nameError, setNameError] = React.useState<string>("");
   const [amountError, setAmountError] = React.useState<string>("");
@@ -79,6 +66,74 @@ const Transactions: React.FC<ITransactionsProps> = ({
       setAmountError("");
     }
   };
+
+  const columns: IDatatableColumn<ITransaction>[] = [
+    {
+      key: "id",
+      label: "ID",
+      centered: true,
+      render: (item) => <span>{item.id}</span>,
+    },
+    {
+      key: "name",
+      label: "Name",
+      centered: true,
+      render: (item) => <span>{item.name}</span>,
+    },
+    {
+      key: "description",
+      label: "Description",
+      centered: false,
+      render: (item) => <span>{item.description}</span>,
+    },
+    {
+      key: "date",
+      label: "Date",
+      centered: true,
+      render: (item) => (
+        <span>{item.date && ToLocalDate(item.date.toISOString())}</span>
+      ),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      centered: true,
+      render: (item) => (
+        <span>
+          {item.currency} {item.amount}
+        </span>
+      ),
+    },
+    {
+      key: "editDelete",
+      label: "Edit / Delete",
+      centered: true,
+      render: (item) => {
+        console.log("executed");
+        return (
+          <Box display="flex" justifyContent="evenly">
+            <IconButton
+              icon="Edit"
+              onClick={() => {
+                setWillBeUpdatedTransactionId(item.id);
+                showUpdateModal();
+              }}
+              bgColor="transparent"
+            />
+            <IconButton
+              icon="Trash2"
+              iconColor="red"
+              onClick={() => {
+                setWillBeDeletedTransactionId(item.id);
+                showDeleteModal();
+              }}
+              bgColor="transparent"
+            />
+          </Box>
+        );
+      },
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -112,74 +167,15 @@ const Transactions: React.FC<ITransactionsProps> = ({
               text="New Transaction"
             />
           </Box>
-          {transactionState.transactions.length <= 0 ? (
-            <p>No Record Found!</p>
-          ) : (
-            <Box>
-              <table className="datatable">
-                <thead className="datatable__header datatable__header--sticky">
-                  <th className="datatable__header-item">ID</th>
-                  <th className="datatable__header-item">Name</th>
-                  <th className="datatable__header-item">Description</th>
-                  <th className="datatable__header-item">Transaction Date</th>
-                  <th className="datatable__header-item">Amount</th>
-                  <th className="datatable__header-item"></th>
-                </thead>
-                <tbody className="datatable__body">
-                  {transactionState.transactions.map((item) => (
-                    <tr key={item.id} className="datatable__row">
-                      <td className="datatable__cell datatable__cell--centered">
-                        {item.id}
-                      </td>
-                      <td className="datatable__cell datatable__cell--centered">
-                        {item.name}
-                      </td>
-                      <td className="datatable__cell">{item.description}</td>
-                      <td className="datatable__cell  datatable__cell--centered">
-                        {item.date && ToLocalDate(item.date.toISOString())}
-                      </td>
-                      <td className="datatable__cell datatable__cell--centered">
-                        {item.currency} {item.amount}
-                      </td>
-                      <td className="datatable__cell  datatable__cell--centered">
-                        <Box display="flex" justifyContent="evenly">
-                          <IconButton
-                            icon="Edit"
-                            onClick={() => {
-                              setWillBeUpdatedTransactionId(item.id);
-                              showNewModal();
-                            }}
-                            bgColor="transparent"
-                          />
-                          <IconButton
-                            icon="Trash2"
-                            iconColor="red"
-                            onClick={() => {
-                              setWillBeDeletedTransactionId(item.id);
-                              showDeleteModal();
-                            }}
-                            bgColor="transparent"
-                          />
-                        </Box>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          )}
+          <Datatable columns={columns} data={transactionState.transactions} />
         </Box>
       </Layout>
 
       <Modal
-        isVisible={transactionState.newAndUpdateTransactionModalVisible}
+        isVisible={transactionState.newTransactionModalVisible}
         accessibilityModalLabel="new transaction"
         onDismiss={() => hideNewModal()}
-        header={`${
-          transactionState.transactionDraft.id !== undefined
-            ? "Update Transaction"
-            : "New Transaction"
-        }`}
+        header="New Transaction"
         footer={
           <Box display="flex" alignItems="center" justifyContent="end">
             <Box>
@@ -189,15 +185,24 @@ const Transactions: React.FC<ITransactionsProps> = ({
                 onClick={() => {
                   validate();
                   if (!nameError && !amountError) {
-                    createTransaction({
-                      ...transactionState.transactionDraft,
-                      id:
-                        Math.max(
-                          ...transactionState.transactions.map(
-                            (item) => item.id,
-                          ),
-                        ) + 1,
-                    });
+                    if (
+                      transactionState.transactions.some((item) => item.id > 0)
+                    ) {
+                      createTransaction({
+                        ...transactionState.transactionDraft,
+                        id:
+                          Math.max(
+                            ...transactionState.transactions.map(
+                              (item) => item.id,
+                            ),
+                          ) + 1,
+                      });
+                    } else {
+                      createTransaction({
+                        ...transactionState.transactionDraft,
+                        id: 1,
+                      });
+                    }
                     hideNewModal();
                   }
                 }}
@@ -268,7 +273,7 @@ const Transactions: React.FC<ITransactionsProps> = ({
               id="amount"
               name="amount"
               label="Transaction Amount"
-              value={transactionState.transactionDraft.amount.toString()}
+              value={transactionState.transactionDraft.amount.toString() || "0"}
               onChange={(v) => {
                 onTransactionDraftChange({
                   ...transactionState.transactionDraft,
@@ -285,22 +290,150 @@ const Transactions: React.FC<ITransactionsProps> = ({
             <Label htmlFor="currency" required>
               Transaction Currency
             </Label>
-            <select
-              value={transactionState.transactionDraft.currency}
-              onChange={(e) => {
+            <Box marginTop={1}>
+              <select
+                value={transactionState.transactionDraft.currency}
+                onChange={(e) => {
+                  onTransactionDraftChange({
+                    ...transactionState.transactionDraft,
+                    currency: e.target.value as Currencies,
+                  });
+                  validate();
+                }}
+                id="currency"
+                name="currency"
+              >
+                <option value={Currencies.TRY}>{Currencies.TRY}</option>
+                <option value={Currencies.USD}>{Currencies.USD}</option>
+                <option value={Currencies.EUR}>{Currencies.EUR}</option>
+              </select>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal
+        isVisible={transactionState.updateTransactionModalVisible}
+        accessibilityModalLabel="update transaction"
+        onDismiss={() => hideUpdateModal()}
+        header="Update Transaction"
+        footer={
+          <Box display="flex" alignItems="center" justifyContent="end">
+            <Box>
+              <Button
+                disabled={!!nameError || !!amountError}
+                text="Save"
+                onClick={() => {
+                  validate();
+                  if (!nameError && !amountError) {
+                    updateTransaction({
+                      ...transactionState.transactionDraft,
+                    });
+                    hideUpdateModal();
+                  }
+                }}
+              />
+            </Box>
+            <Box marginLeft={3}>
+              <Button
+                text="Cancel"
+                bgColor="transparent"
+                onClick={() => hideUpdateModal()}
+              />
+            </Box>
+          </Box>
+        }
+      >
+        <Box display="flex" direction="column">
+          <Box>
+            <TextInput
+              id="name"
+              name="name"
+              label="Transaction Name"
+              value={transactionState.transactionDraft.name}
+              onChange={(v) => {
                 onTransactionDraftChange({
                   ...transactionState.transactionDraft,
-                  currency: e.target.value as Currencies,
+                  name: v,
                 });
                 validate();
               }}
-              id="currency"
-              name="currency"
-            >
-              <option value={Currencies.TRY}>{Currencies.TRY}</option>
-              <option value={Currencies.USD}>{Currencies.USD}</option>
-              <option value={Currencies.EUR}>{Currencies.EUR}</option>
-            </select>
+              required
+              errorMessage={nameError}
+              hasError={!!nameError}
+            />
+          </Box>
+          <Box>
+            <TextArea
+              rows={3}
+              id="description"
+              name="description"
+              label="Transaction Description"
+              value={transactionState.transactionDraft.description}
+              onChange={(v) => {
+                onTransactionDraftChange({
+                  ...transactionState.transactionDraft,
+                  description: v,
+                });
+                validate();
+              }}
+            />
+          </Box>
+          <Box>
+            <DatePicker
+              id="date"
+              label="Transaction Date"
+              value={transactionState.transactionDraft.date}
+              onChange={(v) => {
+                onTransactionDraftChange({
+                  ...transactionState.transactionDraft,
+                  date: v,
+                });
+                validate();
+              }}
+            />
+          </Box>
+          <Box>
+            <TextInput
+              type="number"
+              id="amount"
+              name="amount"
+              label="Transaction Amount"
+              value={transactionState.transactionDraft.amount.toString() || "0"}
+              onChange={(v) => {
+                onTransactionDraftChange({
+                  ...transactionState.transactionDraft,
+                  amount: parseInt(v),
+                });
+                validate();
+              }}
+              required
+              errorMessage={amountError}
+              hasError={!!amountError}
+            />
+          </Box>
+          <Box marginTop={1}>
+            <Label htmlFor="currency" required>
+              Transaction Currency
+            </Label>
+            <Box marginTop={1}>
+              <select
+                value={transactionState.transactionDraft.currency}
+                onChange={(e) => {
+                  onTransactionDraftChange({
+                    ...transactionState.transactionDraft,
+                    currency: e.target.value as Currencies,
+                  });
+                  validate();
+                }}
+                id="currency"
+                name="currency"
+              >
+                <option value={Currencies.TRY}>{Currencies.TRY}</option>
+                <option value={Currencies.USD}>{Currencies.USD}</option>
+                <option value={Currencies.EUR}>{Currencies.EUR}</option>
+              </select>
+            </Box>
           </Box>
         </Box>
       </Modal>
@@ -340,6 +473,26 @@ const Transactions: React.FC<ITransactionsProps> = ({
   );
 };
 
+interface ITransactionsProps extends RouteComponentProps {
+  transactionState: ITransactionsState;
+  createTransaction: (transaction: ITransaction) => ITransactionActions;
+  updateTransaction: (transaction: ITransaction) => ITransactionActions;
+  deleteTransaction: (id: number) => ITransactionActions;
+  showNewModal: () => ITransactionActions;
+  hideNewModal: () => ITransactionActions;
+  showDeleteModal: () => ITransactionActions;
+  hideDeleteModal: () => ITransactionActions;
+  showUpdateModal: () => ITransactionActions;
+  hideUpdateModal: () => ITransactionActions;
+  setWillBeDeletedTransactionId: (
+    id: number | undefined,
+  ) => ITransactionActions;
+  onTransactionDraftChange: (newDraft: ITransaction) => ITransactionActions;
+  setWillBeUpdatedTransactionId: (
+    id: number | undefined,
+  ) => ITransactionActions;
+}
+
 const mapStateToProps = (state: RootState) => {
   return {
     transactionState: state.transactions,
@@ -349,34 +502,48 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     deleteTransaction: (id: number) => {
-      return dispatch<ITransactionActions>(deleteTransaction(id));
+      return dispatch<ITransactionActions>(deleteTransactionAction(id));
     },
     createTransaction: (transaction: ITransaction) => {
-      return dispatch<ITransactionActions>(newTransaction(transaction));
+      return dispatch<ITransactionActions>(newTransactionAction(transaction));
     },
     updateTransaction: (transaction: ITransaction) => {
-      return dispatch<ITransactionActions>(updateTransaction(transaction));
+      return dispatch<ITransactionActions>(
+        updateTransactionAction(transaction),
+      );
     },
     showNewModal: () => {
-      return dispatch<ITransactionActions>(showNewModal());
+      return dispatch<ITransactionActions>(showNewModalAction());
     },
     hideNewModal: () => {
-      return dispatch<ITransactionActions>(hideNewModal());
+      return dispatch<ITransactionActions>(hideNewModalAction());
     },
     showDeleteModal: () => {
-      return dispatch<ITransactionActions>(showDeleteModal());
+      return dispatch<ITransactionActions>(showDeleteModalAction());
     },
     hideDeleteModal: () => {
-      return dispatch<ITransactionActions>(hideDeleteModal());
+      return dispatch<ITransactionActions>(hideDeleteModalAction());
+    },
+    showUpdateModal: () => {
+      return dispatch<ITransactionActions>(showUpdateModalAction());
+    },
+    hideUpdateModal: () => {
+      return dispatch<ITransactionActions>(hideUpdateModalAction());
     },
     setWillBeDeletedTransactionId: (id: number | undefined) => {
-      return dispatch<ITransactionActions>(setWillBeDeletedTransactionId(id));
+      return dispatch<ITransactionActions>(
+        setWillBeDeletedTransactionIdAction(id),
+      );
     },
     setWillBeUpdatedTransactionId: (id: number | undefined) => {
-      return dispatch<ITransactionActions>(setWillBeUpdatedTransactionId(id));
+      return dispatch<ITransactionActions>(
+        setWillBeUpdatedTransactionIdAction(id),
+      );
     },
     onTransactionDraftChange: (newDraft: ITransaction) => {
-      return dispatch<ITransactionActions>(onTransactionDraftChanged(newDraft));
+      return dispatch<ITransactionActions>(
+        onTransactionDraftChangedAction(newDraft),
+      );
     },
   };
 };

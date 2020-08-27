@@ -1,76 +1,67 @@
 import * as React from "react";
-import { Box } from "./Box";
-import { IconButton } from "./IconButton";
 
-export interface IDatatableColumn {
+export interface IDatatableColumn<T = any> {
   key: string;
   label: string;
   centered: boolean;
+  render: (item: T) => React.ReactNode;
 }
 
-interface IDatatableProps {
-  keyExtractorField: string;
-  columns: IDatatableColumn[];
-  data: any[];
-  onEditClick: (item: any) => void;
-  onDeleteClick: (item: any) => void;
+interface IDatatableProps<T = any> {
+  columns: IDatatableColumn<T>[];
+  data: T[];
 }
 
-const Datatable: React.FC<IDatatableProps> = ({
-  data,
-  columns,
-  onDeleteClick,
-  onEditClick,
-  keyExtractorField,
-}) => {
-  return (
-    <table className="datatable">
-      <thead className="datatable__header datatable__header--sticky">
-        {columns.map((column) => {
-          return (
-            <th key={column.key} className="datatable__header-item">
-              {column.label}
-            </th>
-          );
-        })}
-      </thead>
-      <tbody className="datatable__body">
-        {data.map((row) => {
-          return (
-            <tr key={row.id} className="datatable__row">
-              {columns.map((cell, index) => {
-                return (
-                  <td
-                    key={index}
-                    className={`datatable__cell ${
-                      cell.centered ? "datatable__cell--centered" : ""
-                    }`}
-                  >
-                    {row[cell.key]}
-                  </td>
-                );
-              })}
-              <td className="datatable__cell  datatable__cell--centered">
-                <Box display="flex" justifyContent="evenly">
-                  <IconButton
-                    icon="Edit"
-                    onClick={() => onEditClick(row[keyExtractorField])}
-                    bgColor="transparent"
-                  />
-                  <IconButton
-                    icon="Trash2"
-                    iconColor="red"
-                    onClick={() => onDeleteClick(row[keyExtractorField])}
-                    bgColor="transparent"
-                  />
-                </Box>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
+const Datatable = <T extends object>({ data, columns }: IDatatableProps<T>) => {
+  if (data.length > 0) {
+    return (
+      <table className="datatable">
+        <thead className="datatable__header datatable__header--sticky">
+          {columns.map((column) => {
+            return (
+              <th key={column.key} className="datatable__header-item">
+                {column.label}
+              </th>
+            );
+          })}
+        </thead>
+        <tbody className="datatable__body">
+          {data.map((row, index) => {
+            return (
+              <tr key={index} className="datatable__row">
+                {columns.map((cell, index) => {
+                  return (
+                    <Cell
+                      key={index}
+                      centered={cell.centered}
+                      render={cell.render(row)}
+                    />
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  } else return <span>No Record Found!</span>;
 };
 
 export default Datatable;
+
+interface ICellProps {
+  centered: boolean;
+  render: React.ReactNode;
+}
+
+const Cell: React.FC<ICellProps> = ({ centered, render }) => {
+  return (
+    <td
+      className={`datatable__cell ${
+        centered ? "datatable__cell--centered" : ""
+      }`}
+    >
+      {render}
+    </td>
+  );
+};

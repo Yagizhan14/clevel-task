@@ -4,7 +4,8 @@ export interface ITransactionsState {
   transactionDraft: ITransaction;
   transactions: ITransaction[];
   deleteTransactionModalVisible: boolean;
-  newAndUpdateTransactionModalVisible: boolean;
+  newTransactionModalVisible: boolean;
+  updateTransactionModalVisible: boolean;
   willBeDeletedTransactionId: number | undefined;
 }
 export interface ITransaction {
@@ -24,6 +25,8 @@ export enum TransactionActionTypes {
   HIDE_NEW_MODAL,
   SHOW_DELETE_MODAL,
   HIDE_DELETE_MODAL,
+  SHOW_UPDATE_MODAL,
+  HIDE_UPDATE_MODAL,
   SET_WILL_BE_DELETED_TRANSACTION_ID,
   SET_WILL_BE_UPDATED_TRANSACTION_ID,
   TRANSACTION_DRAFT_CHANGE,
@@ -57,6 +60,14 @@ export interface IHideDeleteModalAction {
   type: TransactionActionTypes.HIDE_DELETE_MODAL;
 }
 
+export interface IShowUpdateModalAction {
+  type: TransactionActionTypes.SHOW_UPDATE_MODAL;
+}
+
+export interface IHideUpdateModalAction {
+  type: TransactionActionTypes.HIDE_UPDATE_MODAL;
+}
+
 export interface ISetWillBeDeletedTransactionIdAction {
   type: TransactionActionTypes.SET_WILL_BE_DELETED_TRANSACTION_ID;
   payload: number | undefined;
@@ -82,4 +93,6 @@ export type ITransactionActions =
   | IHideNewModalAction
   | ISetWillBeDeletedTransactionIdAction
   | ITransactionDraftChangeAction
-  | ISetWillBeUpdatedTransactionIdAction;
+  | ISetWillBeUpdatedTransactionIdAction
+  | IHideUpdateModalAction
+  | IShowUpdateModalAction;

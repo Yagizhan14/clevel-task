@@ -46,7 +46,7 @@ export const DatePicker: React.FC<IDatePickerProps> = ({
   value,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
-    () => value || undefined,
+    value,
   );
   const [maskedDate, setMaskedDate] = React.useState<string>("");
   const [monthNumber, setMonthNumber] = React.useState<number>(
@@ -126,6 +126,12 @@ export const DatePicker: React.FC<IDatePickerProps> = ({
   React.useEffect(() => {
     parseStringToDate(maskedDate);
   }, [maskedDate, parseStringToDate]);
+
+  React.useEffect(() => {
+    if (selectedDate) {
+      parseDateToString(selectedDate);
+    }
+  }, []);
 
   const nextMonth = () => {
     // if december

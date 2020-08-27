@@ -23,12 +23,13 @@ const initialState: ITransactionsState = {
     amount: 0,
     currency: Currencies.TRY,
     name: "",
-    date: new Date(),
+    date: undefined,
     description: "",
   },
   willBeDeletedTransactionId: undefined,
   transactions: mapJsonToTransaction(data),
-  newAndUpdateTransactionModalVisible: false,
+  newTransactionModalVisible: false,
+  updateTransactionModalVisible: false,
   deleteTransactionModalVisible: false,
 };
 
@@ -61,12 +62,20 @@ export const TransactionsReducer = (
     case TransactionActionTypes.SHOW_NEW_MODAL:
       return {
         ...state,
-        newAndUpdateTransactionModalVisible: true,
+        transactionDraft: {
+          id: 0,
+          amount: 0,
+          currency: Currencies.TRY,
+          name: "",
+          date: undefined,
+          description: "",
+        },
+        newTransactionModalVisible: true,
       };
     case TransactionActionTypes.HIDE_NEW_MODAL:
       return {
         ...state,
-        newAndUpdateTransactionModalVisible: false,
+        newTransactionModalVisible: false,
       };
     case TransactionActionTypes.SHOW_DELETE_MODAL:
       return {
@@ -78,6 +87,16 @@ export const TransactionsReducer = (
         ...state,
         deleteTransactionModalVisible: false,
       };
+    case TransactionActionTypes.SHOW_UPDATE_MODAL:
+      return {
+        ...state,
+        updateTransactionModalVisible: true,
+      };
+    case TransactionActionTypes.HIDE_UPDATE_MODAL:
+      return {
+        ...state,
+        updateTransactionModalVisible: false,
+      };
     case TransactionActionTypes.SET_WILL_BE_DELETED_TRANSACTION_ID:
       return {
         ...state,
@@ -86,7 +105,9 @@ export const TransactionsReducer = (
     case TransactionActionTypes.SET_WILL_BE_UPDATED_TRANSACTION_ID:
       return {
         ...state,
-        transactionDraft: { ...state.transactions.find((item) => item.id)! },
+        transactionDraft: {
+          ...state.transactions.find((item) => item.id === action.payload)!,
+        },
       };
     case TransactionActionTypes.TRANSACTION_DRAFT_CHANGE:
       return {
